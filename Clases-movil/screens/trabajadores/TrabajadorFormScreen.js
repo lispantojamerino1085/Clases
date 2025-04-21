@@ -30,7 +30,7 @@ const TrabajadorFormScreen = ({ route, navigation }) => {
     apellido: '',
     correo: '',
     telefono: '',
-    direcion: '',
+    direccion: '',
     id_departamento: '',
   });
   
@@ -54,7 +54,7 @@ const TrabajadorFormScreen = ({ route, navigation }) => {
             apellido: data.apellido || '',
             correo: data.correo || '',
             telefono: data.telefono || '',
-            direcion: data.direcion || '',
+            direccion: data.direccion || '',
             id_departamento: data.departamento?.id || '',
           });
         }
@@ -130,6 +130,7 @@ const TrabajadorFormScreen = ({ route, navigation }) => {
       const errorMsg = editMode ? 
         'No se pudo actualizar el trabajador' : 
         'No se pudo crear el trabajador de prueba';
+      
       Alert.alert('Error', errorMsg);
     } finally {
       setSubmitting(false);
@@ -201,8 +202,8 @@ const TrabajadorFormScreen = ({ route, navigation }) => {
             <Text style={styles.label}>Dirección</Text>
             <TextInput
               style={styles.input}
-              value={formData.direcion}
-              onChangeText={(value) => handleChange('direcion', value)}
+              value={formData.direccion}
+              onChangeText={(value) => handleChange('direccion', value)}
               placeholder="Dirección del trabajador"
               multiline
               numberOfLines={2}

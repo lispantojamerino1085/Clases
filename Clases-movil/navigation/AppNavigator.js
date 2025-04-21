@@ -1,12 +1,10 @@
-// navigation/AppNavigator.js
+// AppNavigator.js
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from '../context/AuthContext';
 
-// Importar pantallas
 import LoginScreen from '../screens/auth/LoginScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
 import TrabajadoresScreen from '../screens/trabajadores/TrabajadoresScreen';
@@ -19,7 +17,6 @@ import DepartamentoFormScreen from '../screens/departamentos/DepartamentoFormScr
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// Stack para autenticación
 const AuthStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen name="Login" component={LoginScreen} />
@@ -31,16 +28,12 @@ const AuthStack = () => (
   </Stack.Navigator>
 );
 
-// Stack para trabajadores
 const TrabajadoresStack = () => (
   <Stack.Navigator>
     <Stack.Screen 
       name="TrabajadoresList" 
       component={TrabajadoresScreen} 
-      options={{ 
-        title: 'Trabajadores',
-        headerTitleAlign: 'center',
-      }}
+      options={{ title: 'Trabajadores', headerTitleAlign: 'center' }}
     />
     <Stack.Screen 
       name="TrabajadorDetail" 
@@ -57,16 +50,12 @@ const TrabajadoresStack = () => (
   </Stack.Navigator>
 );
 
-// Stack para departamentos
 const DepartamentosStack = () => (
   <Stack.Navigator>
     <Stack.Screen 
       name="DepartamentosList" 
       component={DepartamentosScreen} 
-      options={{ 
-        title: 'Departamentos',
-        headerTitleAlign: 'center',
-      }}
+      options={{ title: 'Departamentos', headerTitleAlign: 'center' }}
     />
     <Stack.Screen 
       name="DepartamentoDetail" 
@@ -83,17 +72,11 @@ const DepartamentosStack = () => (
   </Stack.Navigator>
 );
 
-// Tab Navigator para la aplicación principal
 const AppTabs = () => (
   <Tab.Navigator
     screenOptions={({ route }) => ({
-      tabBarIcon: ({ focused, color, size }) => {
-        let iconName;
-        if (route.name === 'TrabajadoresTab') {
-          iconName = 'people';
-        } else if (route.name === 'DepartamentosTab') {
-          iconName = 'business';
-        }
+      tabBarIcon: ({ color, size }) => {
+        let iconName = route.name === 'TrabajadoresTab' ? 'people' : 'business';
         return <MaterialIcons name={iconName} size={size} color={color} />;
       },
       tabBarActiveTintColor: '#007BFF',
@@ -101,32 +84,17 @@ const AppTabs = () => (
       headerShown: false,
     })}
   >
-    <Tab.Screen 
-      name="TrabajadoresTab" 
-      component={TrabajadoresStack} 
-      options={{ tabBarLabel: 'Trabajadores' }}
-    />
-    <Tab.Screen 
-      name="DepartamentosTab" 
-      component={DepartamentosStack} 
-      options={{ tabBarLabel: 'Departamentos' }}
-    />
+    <Tab.Screen name="TrabajadoresTab" component={TrabajadoresStack} options={{ tabBarLabel: 'Trabajadores' }} />
+    <Tab.Screen name="DepartamentosTab" component={DepartamentosStack} options={{ tabBarLabel: 'Departamentos' }} />
   </Tab.Navigator>
 );
 
-// Navegador principal
 const AppNavigator = () => {
   const { user, loading } = useAuth();
 
-  if (loading) {
-    return null; // Puedes mostrar un componente de carga aquí
-  }
+  if (loading) return null;
 
-  return (
-    <NavigationContainer>
-      {user ? <AppTabs /> : <AuthStack />}
-    </NavigationContainer>
-  );
+  return user ? <AppTabs /> : <AuthStack />;
 };
 
-export default AppNavigator; 
+export default AppNavigator;

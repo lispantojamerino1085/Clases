@@ -3,7 +3,7 @@ import apiClient from './config';
 
 export const getAllTrabajadores = async () => {
   try {
-    const response = await apiClient.get('trabajadores');
+    const response = await apiClient.get(`/trabajadores`);
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : error;

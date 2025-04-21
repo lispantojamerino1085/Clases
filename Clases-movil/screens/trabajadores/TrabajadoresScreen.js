@@ -19,7 +19,7 @@ const TrabajadoresScreen = ({ navigation }) => {
     try {
        
       const data = await getAllTrabajadores();
-      setTrabajadores(data.data);
+      setTrabajadores(data);
     } catch (error) {
       Alert.alert('Error', 'No se pudieron cargar los trabajadores');
       console.error(error);

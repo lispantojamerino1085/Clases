@@ -1,6 +1,7 @@
 import React from 'react'; 
 import { StatusBar } from 'react-native'; 
-import { NavigationContainer } from '@react-navigation/native'; 
+import { NavigationContainer } from '@react-navigation/native';
+import { navigationRef } from './helpers/RootNavigation'; // importa el ref
 import { SafeAreaProvider } from 'react-native-safe-area-context'; 
 import AppNavigator from './navigation/AppNavigator'; 
 import { AuthProvider } from './context/AuthContext'; 
@@ -22,8 +23,9 @@ export default function App() {
   return (
     <SafeAreaProvider> 
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" /> 
-      <AuthProvider> 
-       <NavigationContainer> 
+      <AuthProvider>
+        {/* ✅ PASA el ref al NavigationContainer aquí */}
+        <NavigationContainer ref={navigationRef}>  
           <AppNavigator /> 
         </NavigationContainer> 
       </AuthProvider> 
