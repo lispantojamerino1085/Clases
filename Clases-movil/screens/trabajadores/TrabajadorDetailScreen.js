@@ -14,7 +14,7 @@ const TrabajadorDetailScreen = ({ route, navigation }) => {
   const loadTrabajador = async () => {
     try {
       const data = await getTrabajador(trabajadorId);
-      setTrabajador(data);
+      setTrabajador(data.data);
     } catch (error) {
       Alert.alert('Error', 'No se pudo cargar la información del trabajador');
       navigation.goBack();
