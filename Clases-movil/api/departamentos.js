@@ -6,7 +6,7 @@ export const getAllDepartamentos = async () => {
     const response = await apiClient.get('https://5c36d0e5-e9b6-4bb0-888f-e57d6f571338-00-2i7rz9xf7vcjb.picard.replit.dev/api/departamentos');
     return response.data;
   } catch (error) {
-    throw error.response ? error.response.data : error;
+    throw error.response ? error.response.data : error; 
   }
 };
 

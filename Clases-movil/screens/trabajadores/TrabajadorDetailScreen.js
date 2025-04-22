@@ -1,10 +1,10 @@
-// screens/trabajadores/TrabajadorDetailScreen.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, Alert, TouchableOpacity } from 'react-native';
 import { getTrabajador, deleteTrabajador } from '../../api/trabajadores';
 import Loading from '../../components/Loading';
 import Button from '../../components/Button';
 import { Ionicons } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native'; // 👈 IMPORTANTE
 
 const TrabajadorDetailScreen = ({ route, navigation }) => {
   const { trabajadorId } = route.params;
@@ -13,6 +13,7 @@ const TrabajadorDetailScreen = ({ route, navigation }) => {
 
   const loadTrabajador = async () => {
     try {
+      setLoading(true); // 👈 importante para volver a mostrar el Loading si se actualiza
       const data = await getTrabajador(trabajadorId);
       setTrabajador(data.data);
     } catch (error) {
@@ -23,9 +24,11 @@ const TrabajadorDetailScreen = ({ route, navigation }) => {
     }
   };
 
-  useEffect(() => {
-    loadTrabajador();
-  }, [trabajadorId]);
+  useFocusEffect(
+    useCallback(() => {
+      loadTrabajador();
+    }, [trabajadorId])
+  );
 
   const handleEdit = () => {
     navigation.navigate('TrabajadorForm', { trabajador });
@@ -114,6 +117,9 @@ const TrabajadorDetailScreen = ({ route, navigation }) => {
     </ScrollView>
   );
 };
+
+// ... estilos (sin cambios)
+
 
 const styles = StyleSheet.create({
   container: {
