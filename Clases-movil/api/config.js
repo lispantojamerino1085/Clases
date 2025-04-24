@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as RootNavigation from '../helpers/RootNavigation'; // asegúrate de tener esto (lo explico abajo)
 
 // Cambia esta URL por la de tu API
-const API_URL = 'https://5c36d0e5-e9b6-4bb0-888f-e57d6f571338-00-2i7rz9xf7vcjb.picard.replit.dev/api';
+const API_URL = 'https://8ea51b84-c69a-4a05-9951-eb3ce70bd34f-00-1s5ldoh4i9bkk.janeway.replit.dev/api';
 
 const apiClient = axios.create({
   baseURL: API_URL,
@@ -18,6 +18,7 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use(
   async (config) => {
     const token = await AsyncStorage.getItem('token');
+    
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

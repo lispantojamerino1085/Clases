@@ -18,6 +18,7 @@ const DepartamentoDetailScreen = ({ route, navigation }) => {
 
   const loadData = async () => {
     try {
+      //console.log('Solicitando departamento:', departamentoId);
       const deptoData = await getDepartamento(departamentoId);
       //console.log(deptoData);
       setDepartamento(deptoData.data);
@@ -25,8 +26,10 @@ const DepartamentoDetailScreen = ({ route, navigation }) => {
       // Esta API debe ser implementada en el  backend (trbajo para entrega)
       // Para obtener trabajadores por departamento
       const trabajadoresData = await getTrabajadoresByDepartamento(departamentoId);
+      //console.log('Trabajadores:', trabajadoresData);
       setTrabajadores(trabajadoresData);
     } catch (error) {
+      //console.error('Error al cargar datos del departamento:', error);
       Alert.alert('Error', 'No se pudo cargar la información del departamento selecionado ');
       navigation.goBack();
     } finally {
