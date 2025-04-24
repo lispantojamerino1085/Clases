@@ -12,18 +12,24 @@ const DepartamentoDetailScreen = ({ route, navigation }) => {
   const [departamento, setDepartamento] = useState(null);
   const [trabajadores, setTrabajadores] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [expandedTrabajadorId, setExpandedTrabajadorId] = useState(null);
+
+  
 
   const loadData = async () => {
     try {
+      //console.log('Solicitando departamento:', departamentoId);
       const deptoData = await getDepartamento(departamentoId);
-      console.log(deptoData);
+      //console.log(deptoData);
       setDepartamento(deptoData.data);
       
       // Esta API debe ser implementada en el  backend (trbajo para entrega)
       // Para obtener trabajadores por departamento
-      //const trabajadoresData = await getTrabajadoresByDepartamento(departamentoId);
-      //setTrabajadores(trabajadoresData);
+      const trabajadoresData = await getTrabajadoresByDepartamento(departamentoId);
+      //console.log('Trabajadores:', trabajadoresData);
+      setTrabajadores(trabajadoresData);
     } catch (error) {
+      //console.error('Error al cargar datos del departamento:', error);
       Alert.alert('Error', 'No se pudo cargar la información del departamento selecionado ');
       navigation.goBack();
     } finally {
@@ -32,8 +38,13 @@ const DepartamentoDetailScreen = ({ route, navigation }) => {
   };
 
   useEffect(() => {
-    loadData();
-  }, [departamentoId]);
+    const unsubscribe = navigation.addListener('focus', () => {
+      loadData();
+    });
+  
+    return unsubscribe;
+  }, [navigation]);
+  
 
   const handleEdit = () => {
     navigation.navigate('DepartamentoForm', { departamento });
@@ -66,48 +77,93 @@ const DepartamentoDetailScreen = ({ route, navigation }) => {
     return <Loading />;
   }
 
+  const toggleExpand = (trabajadorId) => {
+    setExpandedTrabajadorId(prevId => (prevId === trabajadorId ? null : trabajadorId));
+  };
+  
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.card}>
         <View style={styles.header}>
           <Text style={styles.title}>{departamento.nombre}</Text>
+          
           <View style={styles.actions}>
             <TouchableOpacity
               style={styles.iconButton}
               onPress={handleEdit}
             >
-              <Ionicons name="create-outline" size={24} color="#007BFF" />
+            <Ionicons name="create-outline" size={24} color="#007BFF" />
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.iconButton}
               onPress={handleDelete}
-            >
-              <Ionicons name="trash-outline" size={24} color="#FF6B6B" />
+              disabled={trabajadores.length > 0}
+>
+              <Ionicons
+                name="trash-outline"
+                size={24}
+                color={trabajadores.length > 0 ? '#ccc' : '#FF6B6B'}
+              />
             </TouchableOpacity>
+
+            
+
+
           </View>
         </View>
 
         <View style={styles.infoSection}>
           <Text style={styles.sectionTitle}>Trabajadores en este departamento</Text>
           
+          
           {trabajadores.length > 0 ? (
-            trabajadores.map((trabajador) => (
-              <TouchableOpacity
-                key={trabajador.id}
-                style={styles.trabajadorItem}
-                onPress={() => navigation.navigate('TrabajadorDetail', { trabajadorId: trabajador.id })}
-              >
-                <Text style={styles.trabajadorName}>
-                  {trabajador.nombre} {trabajador.apellido}
-                </Text>
-                <Ionicons name="chevron-forward" size={20} color="#007BFF" />
-              </TouchableOpacity>
-            ))
-          ) : (
+              trabajadores.map((trabajador) => (
+                <View key={trabajador.id} style={styles.trabajadorItem}>
+                  <TouchableOpacity
+                    onPress={() => toggleExpand(trabajador.id)}
+                    style={styles.trabajadorHeader}
+                  >
+                    <Text style={styles.trabajadorName}>
+                      {trabajador.nombre} {trabajador.apellido}
+                    </Text>
+                    <Ionicons
+                      name={expandedTrabajadorId === trabajador.id ? 'chevron-down' : 'chevron-forward'}
+                      size={20}
+                      color="#007BFF"
+                    />
+                  </TouchableOpacity>
+
+                  {expandedTrabajadorId === trabajador.id && (
+                    <View style={styles.trabajadorDetails}>
+                      <Text style={styles.detailText}>📧 {trabajador.correo}</Text>
+                      <Text style={styles.detailText}>📞 {trabajador.telefono}</Text>
+                      <Text style={styles.detailText}>🏠 {trabajador.direccion}</Text>
+                      <TouchableOpacity
+                        style={styles.detailButton}
+                        onPress={() => navigation.navigate('TrabajadorDetail', { trabajadorId: trabajador.id })}
+                      >
+                        
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </View>
+              ))
+            ) : (
+
+
             <Text style={styles.emptyText}>No hay trabajadores en este departamento</Text>
           )}
         </View>
       </View>
+
+      {trabajadores.length > 0 && (
+          <View style={styles.warningContainer}>
+          <Text style={styles.warningText}>
+            Este departamento tiene trabajadores y no puede ser eliminado.
+          </Text>
+        </View>
+      )}
 
       <View style={styles.buttonsContainer}>
         <Button
@@ -121,6 +177,7 @@ const DepartamentoDetailScreen = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
@@ -193,6 +250,39 @@ const styles = StyleSheet.create({
   button: {
     marginVertical: 8,
   },
+  trabajadorHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 12,
+  },
+  trabajadorDetails: {
+    backgroundColor: '#eef6fb',
+    padding: 10,
+    borderRadius: 8,
+    marginTop: 5,
+  },
+  detailText: {
+    fontSize: 14,
+    color: '#555',
+    marginBottom: 4,
+  },
+  detailButton: {
+    marginTop: 8,
+    alignSelf: 'flex-start',
+  },
+
+  warningText: {
+  color: '#FF6B6B',
+  fontSize: 14,
+  marginTop: 8,
+  marginBottom: 10,
+  textAlign: 'center',
+  flexShrink: 1,
+},
+
+  
+  
 });
 
 export default DepartamentoDetailScreen;

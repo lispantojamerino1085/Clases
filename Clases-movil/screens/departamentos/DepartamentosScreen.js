@@ -56,9 +56,9 @@ const DepartamentosScreen = ({ navigation }) => {
     <View style={styles.container}> 
       <View style={styles.header}> 
         <Text style={styles.title}>Departamentos</Text> 
-        <TouchableOpacity  
+        <TouchableOpacity   
           style={styles.iconButton} 
-          onPress={() => navigation.navigate('Trabajadores')} 
+          onPress={() => navigation.navigate('TrabajadoresTab')} 
         > 
           <Ionicons name="people-outline" size={24} color="#007BFF" /> 
         </TouchableOpacity> 
@@ -79,7 +79,7 @@ const DepartamentosScreen = ({ navigation }) => {
       /> 
  
       <TouchableOpacity  
-        style={styles.fab} 
+        style={styles.fab}  
         onPress={() => navigation.navigate('DepartamentoForm')} 
       > 
         <Ionicons name="add" size={24} color="#fff" /> 

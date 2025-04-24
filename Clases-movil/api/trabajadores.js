@@ -1,6 +1,7 @@
 // api/trabajadores.js
 import apiClient from './config';
 
+
 export const getAllTrabajadores = async () => {
   try {
     const response = await apiClient.get(`/trabajadores`);
@@ -47,6 +48,8 @@ export const deleteTrabajador = async (id) => {
 };
 
 // Método para obtener trabajadores por departamento
+
+
 export const getTrabajadoresByDepartamento = async (departamentoId) => {
   try {
     const response = await apiClient.get(`/departamentos/${departamentoId}/trabajadores`);
